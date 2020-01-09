@@ -1,0 +1,31 @@
+{
+    "name": "confrariaweb/laravel-datatable",
+    "description": "Package Datatable",
+    "keywords": [
+        "datatable",
+        "framework",
+        "laravel"
+    ],
+    "license": "MIT",
+    "type": "package",
+    "authors": [
+        {
+            "name": "Rafael Zingano",
+            "email": "confrariaweb@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "ConfrariaWeb\\Datatable\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ConfrariaWeb\\Datatable\\Providers\\DatatableServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
