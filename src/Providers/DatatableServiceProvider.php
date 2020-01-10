@@ -1,6 +1,6 @@
 <?php
 
-namespace ConfrariaWeb\Vendor\Providers;
+namespace ConfrariaWeb\Datatable\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
