@@ -2,9 +2,19 @@
 
 Base package for all other laravel packages
 
-## layouts
+## Basic Usage
+```PHP
+$config = [
+        'id' => 'datatable_tasks',
+        'items' => ['title', 'date', 'time', 'status', 'priority', 'destinateds', 'responsibles'],
+        'url' => 'tasks',
+        'slug' => 'tasks'
+    ]
+@datatable($config)
 
-Include for icon usage the following google library <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+@enddatatable
+```
+URL:  url('api/' . $url . '/datatable?api_token=' . auth()->user()->api_token)
 
 ## License
 
