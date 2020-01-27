@@ -34,8 +34,9 @@
                 "serverSide": true,
                 "ajax": {
                     "url": "{{ url('api/' . $url . '/datatable?api_token=' . auth()->user()->api_token) }}",
+                    "dataType": "json",
                     "data": {
-                        "trashed": "{{ $trashed ?? 0 }}"
+                        'data': $('#{{ $id ?? 'datatable_list' }}FormFilter').serialize()
                     }
                 },
                 "columns": [
