@@ -1,5 +1,6 @@
 {
     "name": "confrariaweb/laravel-datatable",
+    "version": "dev-master",
     "description": "Package Datatable",
     "keywords": [
         "datatable",
