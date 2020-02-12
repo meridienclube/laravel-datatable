@@ -2,7 +2,7 @@
     <thead>
     <tr>
         @foreach($items as $item)
-            <th scope="col">{{ __($item) }}</th>
+            <th scope="col">{{ __($item['title']?? $item) }}</th>
         @endforeach
         <th scope="col"></th>
     </tr>
@@ -10,7 +10,7 @@
     <tfoot>
     <tr>
         @foreach($items as $item)
-            <th scope="col">{{ __($item) }}</th>
+            <th scope="col">{{ __($item['title']?? $item) }}</th>
         @endforeach
         <th scope="col"></th>
     </tr>
@@ -45,7 +45,12 @@
                         @else
                         @foreach($items as $item)
                     {
-                        "data": "{{ $item }}", "name": "{{ $item }}"
+                        "data": "{{ $item['data']?? $item }}",
+                        "name": "{{ $item['name']?? $item }}",
+                        @isset($item['render'])
+                        "render": "{{ $item['render'] }}",
+                        @endisset
+                        "title": "{{ $item['title']?? $item }}"
                     },
                         @endforeach
                         @endif
@@ -53,6 +58,10 @@
                         defaultContent: $('#btnsDatatable').html()
                     }
                 ],
+                "columnDefs": [{
+                    "targets": -1,
+                    "orderable": false
+                }],
                 "language": {
                     "sEmptyTable": "Nenhum registro encontrado",
                     "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
@@ -84,17 +93,29 @@
                     }
                 },
                 createdRow: function (row, data, dataIndex) {
-                    $(row).find('td:eq(-1) a.show').attr('href', '/admin/{{ $url }}/' + data.id);
-                    $(row).find('td:eq(-1) a.edit').attr('href', '/admin/{{ $url }}/' + data.id + '/edit');
-                    $(row).find('td:eq(-1) form.form-destroy').attr('action', '/admin/{{ $url }}/' + data.id);
                     @if(isset($createdRow))
                     {{ $createdRow }}
+                    @else
+                    $(row).find('td:eq(-1)').append('' +
+                        '<div class="btn-group btn-group-sm float-right" role="group" aria-label="Btns">\n' +
+                        '<a href="#" class="btn btn-info show">{{ $btns['show']?? 'show' }}</a>\n' +
+                        '<a href="#" class="btn btn-primary edit">{{ $btns['edit']?? 'edit' }}</a>\n' +
+                        '<a href="javascript:void(0)" class="btn btn-danger destroy">{{ $btns['destroy']?? 'destroy' }}</a>\n' +
+                        '</div>' +
+                        '<form action="#" method="POST" class="destroy-user">' +
+                        '@method("DELETE")' +
+                        '@csrf' +
+                        '</form>' +
+                        '');
+                    $(row).find('td:eq(-1) a.show').attr('href', '/admin/{{ $url }}/' + data.id);
+                    $(row).find('td:eq(-1) a.edit').attr('href', '/admin/{{ $url }}/' + data.id + '/edit');
+                    $(row).find('td:eq(-1) form.destroy-user').attr('action', '/admin/{{ $url }}/' + data.id);
                     @endif
                 }
             });
 
             @if(isset($script))
-                {{ $script }}
+            {{ $script }}
             @endif
 
         });
