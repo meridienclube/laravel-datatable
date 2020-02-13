@@ -40,58 +40,103 @@
                     }
                 },
                 "columns": [
-                        @if(isset($columns))
+                    @if(isset($columns))
                         {{ $columns }}
-                        @else
+                    @else
                         @foreach($items as $item)
-                    {
-                        "data": "{{ $item['data']?? $item }}",
-                        "name": "{{ $item['name']?? $item }}",
-                        @isset($item['render'])
-                        "render": "{{ $item['render'] }}",
-                        @endisset
-                        "title": "{{ $item['title']?? $item }}"
-                    },
+                        {
+                            "data": "{{ $item['data']?? $item }}",
+                            "name": "{{ $item['name']?? $item }}",
+                            @isset($item['render'])
+                            /*"render": "{{ $item['render'] }}",*/
+                            "render": function (data, type, row, meta) {
+                                let r = '';
+                                let str = '{{ $item['render'] }}';
+                                if (str.indexOf("implode") >= 0 && type === 'display' && Array.isArray(data) && data.length > 0) {
+                                    //r = str.replace('implode', "[, ]");
+                                    r = data.map(function(data) {
+                                        return data.name;
+                                    }).join(',');
+                                }
+                                if (str.indexOf("object") >= 0 && type === 'display') {
+                                    if(typeof data !== 'undefined'){
+                                        r = data
+                                    }
+                                }
+                                return r;
+                            },
+                            @endisset
+                            "title": "{{ $item['title']?? $item }}"
+                        },
                         @endforeach
-                        @endif
+                    @endif
                     {
                         defaultContent: $('#btnsDatatable').html()
                     }
                 ],
-                "columnDefs": [{
-                    "targets": -1,
-                    "orderable": false
-                }],
-                "language": {
-                    "sEmptyTable": "Nenhum registro encontrado",
-                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                    "sInfoPostFix": "",
-                    "sInfoThousands": ".",
-                    "sLengthMenu": "_MENU_ resultados por página",
-                    "sLoadingRecords": "Carregando...",
-                    "sProcessing": "Processando...",
-                    "sZeroRecords": "Nenhum registro encontrado",
-                    "sSearch": "Pesquisar",
-                    "oPaginate": {
-                        "sNext": "Próximo",
-                        "sPrevious": "Anterior",
-                        "sFirst": "Primeiro",
-                        "sLast": "Último"
-                    },
-                    "oAria": {
-                        "sSortAscending": ": Ordenar colunas de forma ascendente",
-                        "sSortDescending": ": Ordenar colunas de forma descendente"
-                    },
-                    "select": {
-                        "rows": {
-                            "_": "Selecionado %d linhas",
-                            "0": "Nenhuma linha selecionada",
-                            "1": "Selecionado 1 linha"
-                        }
+                "columnDefs":
+                    [{
+                        "targets": -1,
+                        "orderable": false
+                    }],
+                "language":
+                    {
+                        "sEmptyTable":
+                            "Nenhum registro encontrado",
+                        "sInfo":
+                            "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                        "sInfoEmpty":
+                            "Mostrando 0 até 0 de 0 registros",
+                        "sInfoFiltered":
+                            "(Filtrados de _MAX_ registros)",
+                        "sInfoPostFix":
+                            "",
+                        "sInfoThousands":
+                            ".",
+                        "sLengthMenu":
+                            "_MENU_ resultados por página",
+                        "sLoadingRecords":
+                            "Carregando...",
+                        "sProcessing":
+                            "Processando...",
+                        "sZeroRecords":
+                            "Nenhum registro encontrado",
+                        "sSearch":
+                            "Pesquisar",
+                        "oPaginate":
+                            {
+                                "sNext":
+                                    "Próximo",
+                                "sPrevious":
+                                    "Anterior",
+                                "sFirst":
+                                    "Primeiro",
+                                "sLast":
+                                    "Último"
+                            }
+                        ,
+                        "oAria":
+                            {
+                                "sSortAscending":
+                                    ": Ordenar colunas de forma ascendente",
+                                "sSortDescending":
+                                    ": Ordenar colunas de forma descendente"
+                            }
+                        ,
+                        "select":
+                            {
+                                "rows":
+                                    {
+                                        "_":
+                                            "Selecionado %d linhas",
+                                        "0":
+                                            "Nenhuma linha selecionada",
+                                        "1":
+                                            "Selecionado 1 linha"
+                                    }
+                            }
                     }
-                },
+                ,
                 createdRow: function (row, data, dataIndex) {
                     @if(isset($createdRow))
                     {{ $createdRow }}
@@ -118,6 +163,7 @@
             {{ $script }}
             @endif
 
-        });
+        })
+        ;
     </script>
 @endpush
